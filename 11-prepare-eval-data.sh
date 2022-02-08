@@ -19,7 +19,7 @@ for task in tst-COMMON tst-HE ; do
     if test ! -e ${WORKDIR}/MuST-C/${SRC}-${TRG}/eval-${task}/.done ; then
         make_dir ${WORKDIR}/MuST-C/${SRC}-${TRG}/eval-${task}
         env PYTHONPATH=${FAIRSEQ_ROOT} \
-            ${python3} ${FAIRSEQ_ROOT}/examples/speech_to_text/seg_mustc_data_v2.py --data-root ${MUSTC_ROOT} --lang ${TRG} --output ${WORKDIR}/MuST-C/${SRC}-${TRG}/eval-${task} --task st
+            ${python3} ${FAIRSEQ_ROOT}/examples/speech_to_text/seg_mustc_data_v2.py --data-root ${MUSTC_ROOT} --lang ${TRG} --output ${WORKDIR}/MuST-C/${SRC}-${TRG}/eval-${task} --task st --split ${task}
         if test $? -eq 0 ; then
             touch ${WORKDIR}/MuST-C/${SRC}-${TRG}/eval-${task}/.done
         else
