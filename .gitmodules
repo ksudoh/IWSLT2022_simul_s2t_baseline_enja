@@ -1,0 +1,15 @@
+[submodule "fairseq-mustc/fairseq"]
+	path = fairseq-mustc/fairseq
+	url = https://github.com/ksudoh/fairseq.git
+[submodule "fairseq-asr/fairseq"]
+	path = fairseq-asr/fairseq
+	url = https://github.com/ksudoh/fairseq.git
+[submodule "fairseq-waitk/fairseq"]
+	path = fairseq-waitk/fairseq
+	url = https://github.com/ksudoh/fairseq.git
+[submodule "fairseq-simul/fairseq"]
+	path = fairseq-simul/fairseq
+	url = https://github.com/ksudoh/fairseq.git
+[submodule "fairseq"]
+	path = fairseq
+	url = https://github.com/ksudoh/fairseq.git
