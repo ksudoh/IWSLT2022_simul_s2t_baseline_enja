@@ -1,3 +1,6 @@
 [submodule "fairseq"]
 	path = fairseq
 	url = https://github.com/ksudoh/fairseq.git
+[submodule "SimulEval"]
+	path = SimulEval
+	url = https://github.com/ksudoh/SimulEval.git
