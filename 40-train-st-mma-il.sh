@@ -6,29 +6,34 @@
 
 basedir=`dirname $0`
 scriptdir=${basedir}/scripts
-FAIRSEQ_ROOT=${basedir}/fairseq
+FAIRSEQ_ROOT=${basedir}/fairseq-mma-il/fairseq
+SIMULEVAL_ROOT=${basedir}/SimulEval
 . ${scriptdir}/00-env.sh
 
 parse_options "$@"
 shift $?
 if test ${verbose} -gt 0 ; then set -x ; fi
 
-if test -e ${WORKDIR}/ASR/.done ; then
-    make_dir ${WORKDIR}/ST/${SRC}-${TRG}/mma-il
+if test -z "${LATENCY_AVG_WEIGHT}" ; then
+    LATENCY_AVG_WEIGHT=0.1
+fi
 
-    env PYTHONPATH=${FAIRSEQ_ROOT} \
+if test -e ${WORKDIR}/ASR/${SRC}-${TRG}/.done ; then
+    make_dir ${WORKDIR}/ST/${SRC}-${TRG}/mma-il_w${LATENCY_AVG_WEIGHT}
+
+    env PYTHONPATH=${FAIRSEQ_ROOT}:${SIMULEVAL_ROOT} \
         ${python3} ${FAIRSEQ_ROOT}/train.py ${WORKDIR}/MuST-C/${SRC}-${TRG} \
             --load-pretrained-encoder-from ${WORKDIR}/ASR/${SRC}-${TRG}/checkpoint_best.pt \
             --config-yaml config_st.yaml \
             --train-subset train_st \
             --valid-subset dev_st \
-            --save-dir ${WORKDIR}/ST/${SRC}-${TRG}/mma-il \
+            --save-dir ${WORKDIR}/ST/${SRC}-${TRG}/mma-il_w${LATENCY_AVG_WEIGHT} \
             --num-workers 4 \
             --max-tokens 40000 \
             --max-update 100000 \
             --task speech_to_text \
             --criterion latency_augmented_label_smoothed_cross_entropy \
-            --latency-weight-avg 0.1 \
+            --latency-avg-weight ${LATENCY_AVG_WEIGHT} \
             --arch convtransformer_simul_trans_espnet \
             --simul-type infinite_lookback_fixed_pre_decision \
             --fixed-pre-decision-ratio 7 \
@@ -40,10 +45,12 @@ if test -e ${WORKDIR}/ASR/.done ; then
             --seed 1 \
             --update-freq 8
     if test $? -eq 0 ; then
-        touch ${WORKDIR}/ST/${SRC}-${TRG}/mma-il/.done
+        touch ${WORKDIR}/ST/${SRC}-${TRG}/mma-il_w${LATENCY_AVG_WEIGHT}/.done
     else
         error_and_die "Failed to train ST mma-il."
     fi
+else
+    error_and_die "ASR pretraining has not been finished in ${WORKDIR}/ASR/${SRC}-${TRG}."
 fi
 
 exit 0

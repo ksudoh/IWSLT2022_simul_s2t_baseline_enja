@@ -35,3 +35,10 @@ mustc_data_dir=${MUSTC_ROOT}/${langpair}/data
 ## Check directories and utilities
 ##
 check_dir ${MUSTC_ROOT} ${mustc_data_dir} ${FAIRSEQ_ROOT}
+
+##
+## Import language-pair-dependent variables and subroutines
+##
+if test -s ${scriptdir}/09-var-${SRC}-${TRG}.sh ; then
+        . ${scriptdir}/09-var-${SRC}-${TRG}.sh
+fi
