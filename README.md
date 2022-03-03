@@ -1,6 +1,23 @@
-# IWSLT 2022 Evaluation Campaign: Simultaneous Translation Baseline (Engilsh-to-Japanese Speech-to-Text)
+# IWSLT 2022 Evaluation Campaign: Simultaneous Translation Baseline (Engilsh-to-Japanese Text-to-Text)
 
 ## Table of Contents
+- [IWSLT 2022 Evaluation Campaign: Simultaneous Translation Baseline (Engilsh-to-Japanese Text-to-Text)](#iwslt-2022-evaluation-campaign-simultaneous-translation-baseline-engilsh-to-japanese-text-to-text)
+  - [Table of Contents](#table-of-contents)
+  - [Requirements](#requirements)
+  - [Setup](#setup)
+    - [Clone a repository and install required packages](#clone-a-repository-and-install-required-packages)
+    - [Setup fairseq (if needed)](#setup-fairseq-if-needed)
+    - [(Not avaiable now) Setup fairseq for MMA-IL (if needed)](#not-avaiable-now-setup-fairseq-for-mma-il-if-needed)
+    - [Setup SimulEval](#setup-simuleval)
+  - [Data preparation](#data-preparation)
+  - [Setting Environment Variables](#setting-environment-variables)
+  - [Preprocessing](#preprocessing)
+  - [ASR pretraining](#asr-pretraining)
+  - [Wait-K model](#wait-k-model)
+    - [Training](#training)
+    - [Test](#test)
+  - [(Not avaiable now) MMA-IL (Monotonic Multihead Attention with Infinite Lookback) model](#not-avaiable-now-mma-il-monotonic-multihead-attention-with-infinite-lookback-model)
+    - [Training](#training-1)
 ---
 
 ## Requirements
@@ -54,18 +71,24 @@ $ popd
 $ export SRC=en
 $ export TRG=ja
 $ export MUSTC_ROOT=/path/to/MuST-C
-$ export WMT_DATA_ROOT=/path/to/WMT-train
 $ export WORKDIR=/path/to/work
 ```
 
 ## Preprocessing
-- The wrapper script `10-preprocess.sh` conducts the following preprocessings:
-  - Extract bilingual sentences from the datasets
-  - Train a unigram subword model using SentencePiece (shared across languages)
-  - Tokenize the bilingual sentences
-  - Binarize the training and development datasets using `fairseq-preprocess`
+- The wrapper script `10-preprocess.sh` conducts the required preprocessing
 ```shell
 $ bash ./10-preprocess.sh
+```
+- The wrapper script `11-prepare-eval-data.sh` prepares the test data
+```shell
+$ bash ./11-prepare-eval-data.sh
+```
+
+## ASR pretraining
+- Set a variable `CUDA_VISIBLE_DEVICES`
+- You may use multiple GPUs, but the batch size becomes larger accordingly.
+```shell
+$ env CUDA_VISIBLE_DEVICES=0 bash ./20-train-pretraining.sh
 ```
 
 ## Wait-K model
@@ -73,12 +96,13 @@ $ bash ./10-preprocess.sh
 - You may use multiple GPUs, but the batch size becomes larger accordingly.
 ### Training
 ```shell
-$ env K=20 CUDA_VISIBLE_DEVICES=0 bash ./20-train-wait-k.sh
+$ env K=20 CUDA_VISIBLE_DEVICES=0 bash ./30-train-st-wait-k.sh
 ```
 
 ### Test
+SimulEval sometimes fails to establish the connection between the server and the client, so please terminate the process and re-run in such a case.
 ```shell
-$ env K=20 CUDA_VISIBLE_DEVICES=0 bash ./21-test-wait-k.sh
+$ env K=20 CUDA_VISIBLE_DEVICES=0 bash ./31-test-wait-k.sh
 ```
 
 ## (Not avaiable now) MMA-IL (Monotonic Multihead Attention with Infinite Lookback) model
@@ -86,10 +110,5 @@ $ env K=20 CUDA_VISIBLE_DEVICES=0 bash ./21-test-wait-k.sh
 - You may use multiple GPUs, but the batch size becomes larger accordingly.
 ### Training
 ```shell
-$ env CUDA_VISIBLE_DEVICES=0 bash ./30-train-mma-il.sh
-```
-
-### Test
-```shell
-$ env CUDA_VISIBLE_DEVICES=0 bash ./31-test-mma-il.sh
+$ env CUDA_VISIBLE_DEVICES=0 bash ./40-train-st-mma-il.sh
 ```
