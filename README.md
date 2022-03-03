@@ -1,7 +1,7 @@
-# IWSLT 2022 Evaluation Campaign: Simultaneous Translation Baseline (Engilsh-to-Japanese Text-to-Text)
+# IWSLT 2022 Evaluation Campaign: Simultaneous Translation Baseline (Engilsh-to-Japanese Speech-to-Text)
 
 ## Table of Contents
-- [IWSLT 2022 Evaluation Campaign: Simultaneous Translation Baseline (Engilsh-to-Japanese Text-to-Text)](#iwslt-2022-evaluation-campaign-simultaneous-translation-baseline-engilsh-to-japanese-text-to-text)
+- [IWSLT 2022 Evaluation Campaign: Simultaneous Translation Baseline (Engilsh-to-Japanese Speech-to-Text)](#iwslt-2022-evaluation-campaign-simultaneous-translation-baseline-engilsh-to-japanese-speech-to-text)
   - [Table of Contents](#table-of-contents)
   - [Requirements](#requirements)
   - [Setup](#setup)
